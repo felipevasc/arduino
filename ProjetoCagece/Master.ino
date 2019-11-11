@@ -1,14 +1,14 @@
 //Compila apenas se MASTER estiver definido no arquivo principal
 #ifdef MASTER
 String S1, S2, S3, S4, S5, S6;
-int bomba[] = {9, 9, 9, 9, 9, 9};
+long reservatorio;
 
 int key[] = {0, 0, 0, 0, 0, 0};
 
 #include "funcoesWifi.h";
 
 //Intervalo entre os envios
-#define INTERVAL 10000
+#define INTERVAL 1000
 long lastSendTime = 0;
 
 
@@ -32,6 +32,22 @@ void loop(){
   if (millis() - lastSendTime > INTERVAL){
     lastSendTime = millis();
 
+    reservatorio = getDistance(RESERVATORIO_TRIG_PIN, RESERVATORIO_ECHO_PIN);
+    if (reservatorio < 4) {
+      jsonStatus["key"] = key[0];
+      jsonStatus["bomba"] = 1;
+      jsonStatus["destino"] = "S"+String(i + 1);
+      jsonStatus["origem"] = ID; 
+      enviarLora(jsonStatus);
+    }
+    if (reservatorio > 300) {
+      jsonStatus["key"] = key[0];
+      jsonStatus["bomba"] = 0;
+      jsonStatus["destino"] = "S"+String(i + 1);
+      jsonStatus["origem"] = ID; 
+      enviarLora(jsonStatus);
+    }
+    
     for (int i = 0; i < 6; i++) {
       if (bomba[i] < 2) {
         jsonStatus["key"] = key[i];

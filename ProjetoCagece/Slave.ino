@@ -36,15 +36,16 @@ void loop() {
     jsonStatus["destino"] = ID_MASTER;
     enviarLora(jsonStatus);
   }
-
   
   String recebida = receberLora();  
   if (recebida.indexOf("\"key\":"+String(key)) >= 0) {
     Serial.println("EVENTO BOMBA");
     if (recebida.indexOf("\"bomba\":1") >= 0) {
-        Serial.println("LIGAR BOMBA");
+      digitalWrite(BOMBA, 1);
+      Serial.println("LIGAR BOMBA");
     }
     else if (recebida.indexOf("\"bomba\":0") >= 0) {
+      digitalWrite(BOMBA, 0);
       Serial.println("DESLIGAR BOMBA");
     }
   }
