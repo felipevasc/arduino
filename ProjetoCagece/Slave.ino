@@ -29,7 +29,7 @@ void loop() {
     lastSendTime = millis();
     
     jsonStatus["agua"] = getDistance(AGUA_TRIG_PIN, AGUA_ECHO_PIN);
-    jsonStatus["pressao"] = getDistance(PRES_TRIG_PIN, PRES_ECHO_PIN);
+    jsonStatus["pressao"] = getDistance(RESERVATORIO_TRIG_PIN, RESERVATORIO_ECHO_PIN);
     jsonStatus["bomba"] = digitalRead(BOMBA);
     jsonStatus["key"] = key;
     jsonStatus["origem"] = ID;

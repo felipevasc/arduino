@@ -2,13 +2,15 @@
 #ifdef MASTER
 String S1, S2, S3, S4, S5, S6;
 long reservatorio;
+int bomba[] = {9, 9, 9, 9, 9, 9};
 
 int key[] = {0, 0, 0, 0, 0, 0};
 
 #include "funcoesWifi.h";
+#include "sensorUltrasonico.h";
 
 //Intervalo entre os envios
-#define INTERVAL 1000
+#define INTERVAL 3000
 long lastSendTime = 0;
 
 
@@ -23,7 +25,8 @@ void setup(){
   //pinMode(LIGAR, INPUT);
   mostrarTexto("Master ", "Aguardando conexao");
   mostrar();
-  
+  pinMode(RESERVATORIO_TRIG_PIN, OUTPUT);
+  pinMode(RESERVATORIO_ECHO_PIN, INPUT);
   conectarWifi();
 }
 
@@ -33,30 +36,36 @@ void loop(){
     lastSendTime = millis();
 
     reservatorio = getDistance(RESERVATORIO_TRIG_PIN, RESERVATORIO_ECHO_PIN);
-    if (reservatorio < 4) {
+    Serial.print("Reservatorio:");
+    Serial.println(reservatorio);
+    if (reservatorio > 0 and reservatorio < 4) {
       jsonStatus["key"] = key[0];
       jsonStatus["bomba"] = 1;
-      jsonStatus["destino"] = "S"+String(i + 1);
+      jsonStatus["destino"] = "S1";
       jsonStatus["origem"] = ID; 
       enviarLora(jsonStatus);
+      Serial.print(">Ligar bomba");
     }
     if (reservatorio > 300) {
       jsonStatus["key"] = key[0];
       jsonStatus["bomba"] = 0;
-      jsonStatus["destino"] = "S"+String(i + 1);
+      jsonStatus["destino"] = "S1";
       jsonStatus["origem"] = ID; 
       enviarLora(jsonStatus);
+      Serial.print(">Desligar bomba");
     }
     
     for (int i = 0; i < 6; i++) {
+/*
       if (bomba[i] < 2) {
         jsonStatus["key"] = key[i];
         jsonStatus["bomba"] = bomba[i];
         jsonStatus["destino"] = "S"+String(i + 1);
         jsonStatus["origem"] = ID; 
         enviarLora(jsonStatus);
-      } 
+      } */
     }
+    Serial.println();
   }
 
   String msgRecebida = receberLora();

@@ -4,8 +4,8 @@
 #include <ESPmDNS.h> 
 #include "inicio.h";
 
-const char* ssid = "Brisa";
-const char* password = "serieaprasempre";
+const char* ssid = "CAGECE-IOT";
+const char* password = "iot12345";
 char rede[50];
 char senha[50];
 
