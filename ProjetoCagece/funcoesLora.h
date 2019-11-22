@@ -46,6 +46,7 @@ void enviarLora(StaticJsonDocument<200> dados) {
 String receberLora() {
   StaticJsonDocument<200> json;
   int packetSize = LoRa.parsePacket();
+  
   if (packetSize > 0) {
     int rssi = LoRa.packetRssi();
     
@@ -56,7 +57,7 @@ String receberLora() {
     }
     
     String msgReceived = descriptografar(received);
-    
+    Serial.println("Recebido: " + msgReceived);
     DeserializationError error = deserializeJson(json, msgReceived.c_str());
      if (error) {
       Serial.print(F("deserializeJson() failed: "));
@@ -66,7 +67,8 @@ String receberLora() {
     String origem = json["origem"];
     String destino = json["destino"];
     if (origem && destino && destino == ID) {
-      mostrarTexto2("R:"+msgReceived.substring(0, 30));
+      
+      //mostrarTexto2("R:"+msgReceived.substring(0, 30));
       mostrarTexto3(String(rssi));
       return msgReceived;
     }

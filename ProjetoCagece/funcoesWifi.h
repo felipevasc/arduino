@@ -71,7 +71,7 @@ void check() {
   if (S5 != "") mensagem += "\"S5\":"+S5+",";
   if (S6 != "") mensagem += "\"S6\":"+S6+",";
   long tempo = millis();
-  mensagem += "\"tempo\":"+String(tempo)+"}";
+  mensagem += "\"d\":\""+String(reservatorio)+"\",\":\"tempo\":"+String(tempo)+"}";
   server.send(200, "text/html", mensagem);
 }
 
@@ -135,10 +135,13 @@ void conectarWifi() {
   WiFi.mode(WIFI_STA);
   WiFi.persistent(true);
   WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
+  int i = 0;
+  while (WiFi.status() != WL_CONNECTED && i < 20) {
     delay(500);
     Serial.print(".");
+    i++;
   }
+  Serial.println(ssid);
   Serial.println(WiFi.localIP());
   Serial.println(WiFi.macAddress());
   if (MDNS.begin("esp32")) {

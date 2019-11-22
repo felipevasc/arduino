@@ -1,6 +1,6 @@
 //#define MASTER
 //#define ID "M1"
-#define ID "S1"
+#define ID "S2"
 
 #define ID_MASTER "M1"
 
@@ -14,7 +14,7 @@
 
 
 /* PINO LIGA/DESLIGA BOMBA */
-#define BOMBA 35
+#define BOMBA 22
 
 /* PINOS MONITORAMENTO RESERVATORIO MASTER */
 #define RESERVATORIO_TRIG_PIN 39 //verde

@@ -8,11 +8,12 @@ int key[] = {0, 0, 0, 0, 0, 0};
 
 #include "funcoesWifi.h";
 #include "sensorUltrasonico.h";
+#include <HTTPClient.h>
 
 //Intervalo entre os envios
-#define INTERVAL 3000
+#define INTERVAL 2000
 long lastSendTime = 0;
-
+long tempo = 0;
 
 void setup(){
   Serial.begin(115200);
@@ -33,12 +34,21 @@ void setup(){
 void loop(){
  
   if (millis() - lastSendTime > INTERVAL){
+    //Serial.println(ssid);
+    Serial.println(WiFi.localIP());
     lastSendTime = millis();
 
     reservatorio = getDistance(RESERVATORIO_TRIG_PIN, RESERVATORIO_ECHO_PIN);
+
+        
+    String distancia = String(reservatorio);
+    while (distancia.length() < 3) {
+      distancia = "0"+distancia;
+    }
+    mostrarTexto2("D:"+String(distancia).substring(0, 1)+","+String(distancia).substring(1)+"m");
     Serial.print("Reservatorio:");
     Serial.println(reservatorio);
-    if (reservatorio > 0 and reservatorio < 4) {
+    if (reservatorio > 0 and reservatorio < 100) {
       jsonStatus["key"] = key[0];
       jsonStatus["bomba"] = 1;
       jsonStatus["destino"] = "S1";
@@ -46,7 +56,7 @@ void loop(){
       enviarLora(jsonStatus);
       Serial.print(">Ligar bomba");
     }
-    if (reservatorio > 300) {
+    if (reservatorio > 200) {
       jsonStatus["key"] = key[0];
       jsonStatus["bomba"] = 0;
       jsonStatus["destino"] = "S1";
